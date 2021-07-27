@@ -44,5 +44,10 @@ public class HomeController {
         return "redirect:/";
     }
 
+    @GetMapping("/products/remove/{code}")
+    public String remove(Model model, @PathVariable("code") String code){
+        repo.removeOne(code);
+        return "redirect:/";
+    }
 
 }

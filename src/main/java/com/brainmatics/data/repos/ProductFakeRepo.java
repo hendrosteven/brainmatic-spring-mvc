@@ -43,6 +43,7 @@ public class ProductFakeRepo implements ProductRepo{
         for(Product product : this.products){          
             if(product.getCode().equalsIgnoreCase(code)){                
                 this.products.remove(product);
+                break;
             }
         }
     }
