@@ -1,10 +1,11 @@
 package com.brainmatics.controllers;
 
-import java.util.List;
+import java.util.Optional;
 
 import com.brainmatics.data.entity.Product;
-import com.brainmatics.data.repos.ProductFakeRepo;
+import com.brainmatics.data.repos.ProductRepo;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,50 +17,56 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/")
 public class HomeController {
 
-    private ProductFakeRepo repo = new ProductFakeRepo();
-    
+    @Autowired
+    private ProductRepo repo;
+
     @GetMapping
-    public String main(Model model){
-        List<Product> products = repo.findAll();
+    public String main(Model model) {
+        Iterable<Product> products = repo.findAll();
         model.addAttribute("products", products);
         return "index";
     }
 
-    @GetMapping("/products/{code}")
-    public String detail(Model model, @PathVariable("code") String code){
-        Product product = repo.findOne(code);
-        model.addAttribute("product", product);
+    @GetMapping("/products/{id}")
+    public String detail(Model model, @PathVariable("id") Long id) {
+        Optional<Product> product = repo.findById(id);
+        if (product.isPresent()) {
+            model.addAttribute("product", product.get());
+        }
         return "detail";
     }
 
     @GetMapping("/products/add")
-    public String add(Model model){
+    public String add(Model model) {
         model.addAttribute("product", new Product());
         return "input";
     }
 
     @PostMapping("/products/save")
-    public String save(Product product){
-        repo.createOne(product);
+    public String save(Product product) {
+        repo.save(product);
         return "redirect:/";
     }
 
-    @GetMapping("/products/remove/{code}")
-    public String remove(Model model, @PathVariable("code") String code){
-        repo.removeOne(code);
+    @GetMapping("/products/remove/{id}")
+    public String remove(Model model, @PathVariable("id") Long id) {
+        repo.deleteById(id);
         return "redirect:/";
     }
 
-    @GetMapping("/products/edit/{code}")
-    public String edit(Model model, @PathVariable("code") String code){
-        Product product = repo.findOne(code);
-        model.addAttribute("product", product);
-        return "edit";
+    @GetMapping("/products/edit/{id}")
+    public String edit(Model model, @PathVariable("id") Long id) {
+        Optional<Product> product = repo.findById(id);
+        if(product.isPresent()) {
+            model.addAttribute("product", product);
+            return "edit";
+        }
+        return "redirect:/";
     }
 
     @PostMapping("/products/update")
-    public String update(Product product){
-        repo.updateOne(product);
+    public String update(Product product) {
+        repo.save(product);
         return "redirect:/";
     }
 

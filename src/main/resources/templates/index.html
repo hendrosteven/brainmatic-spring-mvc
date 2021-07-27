@@ -23,6 +23,7 @@
       <table class="table">
         <thead class="thead-dark">
           <tr>
+            <th>ID</th>
             <th>Code</th>
             <th>Name</th>
             <th>Price</th>
@@ -32,14 +33,15 @@
         </thead>
         <tbody>
           <tr th:each="product : ${products}">
+            <td th:text="${product.id}"></td>
             <td th:text="${product.code}"></td>
             <td th:text="${product.name}"></td>
             <td th:text="${product.price}"></td>
             <td th:text="${product.description}"></td>
             <td align="center">
-              <a th:href="@{/products/{code}/(code=${product.code})}" class="btn btn-success"><i class="fas fa-eye"></i></a>
-              <a th:href="@{/products/edit/{code}/(code=${product.code})}" class="btn btn-warning"><i class="fas fa-edit"></i></a>
-              <a th:href="@{/products/remove/{code}/(code=${product.code})}" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+              <a th:href="@{/products/{id}/(id=${product.id})}" class="btn btn-success"><i class="fas fa-eye"></i></a>
+              <a th:href="@{/products/edit/{id}/(id=${product.id})}" class="btn btn-warning"><i class="fas fa-edit"></i></a>
+              <a th:href="@{/products/remove/{id}/(id=${product.id})}" class="btn btn-danger"><i class="fas fa-trash"></i></a>
             </td>
           </tr>
         </tbody>
