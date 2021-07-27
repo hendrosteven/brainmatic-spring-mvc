@@ -3,7 +3,9 @@ package com.brainmatics.controllers;
 import java.util.Optional;
 
 import com.brainmatics.data.entity.Product;
+import com.brainmatics.data.repos.CategoryRepo;
 import com.brainmatics.data.repos.ProductRepo;
+import com.brainmatics.dto.ProductData;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +21,9 @@ public class HomeController {
 
     @Autowired
     private ProductRepo repo;
+
+    @Autowired
+    private CategoryRepo categoryRepo;
 
     @GetMapping
     public String main(Model model) {
@@ -38,12 +43,19 @@ public class HomeController {
 
     @GetMapping("/products/add")
     public String add(Model model) {
-        model.addAttribute("product", new Product());
+        model.addAttribute("product", new ProductData());
+        model.addAttribute("categories", categoryRepo.findAll());
         return "input";
     }
 
     @PostMapping("/products/save")
-    public String save(Product product) {
+    public String save(ProductData productData) {
+        Product product = new Product();
+        product.setCode(productData.getCode());
+        product.setName(productData.getName());
+        product.setPrice(productData.getPrice());
+        product.setDescription(productData.getDescription());
+        product.setCategory(categoryRepo.findById(productData.getCategoryId()).get());
         repo.save(product);
         return "redirect:/";
     }
