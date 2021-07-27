@@ -50,4 +50,17 @@ public class HomeController {
         return "redirect:/";
     }
 
+    @GetMapping("/products/edit/{code}")
+    public String edit(Model model, @PathVariable("code") String code){
+        Product product = repo.findOne(code);
+        model.addAttribute("product", product);
+        return "edit";
+    }
+
+    @PostMapping("/products/update")
+    public String update(Product product){
+        repo.updateOne(product);
+        return "redirect:/";
+    }
+
 }

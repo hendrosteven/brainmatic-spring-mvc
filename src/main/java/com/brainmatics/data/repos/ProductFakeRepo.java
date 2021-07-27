@@ -49,10 +49,11 @@ public class ProductFakeRepo implements ProductRepo{
     }
 
     @Override
-    public Product updateOne(Product product) {
-        for(Product temp : this.products){          
-            if(temp.getCode().equalsIgnoreCase(product.getCode())){   
-                temp = product;             
+    public Product updateOne(Product product) {        
+        for(Product temp : this.products){                      
+            if(temp.getCode().equalsIgnoreCase(product.getCode())){  
+                products.remove(temp);
+                products.add(product);             
                 return temp;
             }
         }

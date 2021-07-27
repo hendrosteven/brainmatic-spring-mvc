@@ -38,7 +38,7 @@
             <td th:text="${product.description}"></td>
             <td align="center">
               <a th:href="@{/products/{code}/(code=${product.code})}" class="btn btn-success"><i class="fas fa-eye"></i></a>
-              <a th:href="@{/products/{code}/(code=${product.code})}" class="btn btn-warning"><i class="fas fa-edit"></i></a>
+              <a th:href="@{/products/edit/{code}/(code=${product.code})}" class="btn btn-warning"><i class="fas fa-edit"></i></a>
               <a th:href="@{/products/remove/{code}/(code=${product.code})}" class="btn btn-danger"><i class="fas fa-trash"></i></a>
             </td>
           </tr>
