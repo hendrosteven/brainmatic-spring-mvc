@@ -2,14 +2,19 @@ package com.brainmatics.controllers;
 
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import com.brainmatics.data.entity.Product;
 import com.brainmatics.data.repos.CategoryRepo;
 import com.brainmatics.data.repos.ProductRepo;
+import com.brainmatics.dto.MessageData;
 import com.brainmatics.dto.ProductData;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,7 +54,19 @@ public class HomeController {
     }
 
     @PostMapping("/products/save")
-    public String save(ProductData productData) {
+    public String save(@Valid ProductData productData, BindingResult resultErrors, Model model) {
+
+        if(resultErrors.hasErrors()) {
+            MessageData errorMessage = new MessageData();
+            for(ObjectError err: resultErrors.getAllErrors()) {
+                errorMessage.getMessages().add(err.getDefaultMessage());
+            }
+            model.addAttribute("product", productData);
+            model.addAttribute("ERROR", errorMessage);
+            model.addAttribute("categories", categoryRepo.findAll());
+            return "input";
+        }
+
         Product product = new Product();
         product.setCode(productData.getCode());
         product.setName(productData.getName());

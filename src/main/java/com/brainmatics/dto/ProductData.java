@@ -1,10 +1,24 @@
 package com.brainmatics.dto;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+
 public class ProductData {
+
+    @NotEmpty(message = "Code is required")
+    @Size(min=3, max=5, message="Code length must be 3 to 5 characters")
+    @Pattern(regexp = "PK[0-9]+", message = "Code must be start with PK")
     private String code;
+
+    @NotEmpty(message = "Name is required")
     private String name;
+
     private double price;
+
     private String description;
+
     private Long categoryId;
     
     public String getCode() {
