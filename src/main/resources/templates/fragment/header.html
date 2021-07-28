@@ -64,6 +64,9 @@
                 </div>
                 </li>
             </ul>
+            <span th:if=${session.CURRENT_USER}>
+                <a class="btn btn-danger" th:href="@{/users/logout}"><i class="fas fa-sign-out-alt"></i> <span th:text="${session.CURRENT_USER}"></span></a>
+            </span>
             </div>
         </div>
         </nav>

@@ -2,6 +2,7 @@ package com.brainmatics.controllers;
 
 import java.util.Optional;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import com.brainmatics.data.entity.Product;
@@ -30,6 +31,9 @@ public class HomeController {
     @Autowired
     private CategoryRepo categoryRepo;
 
+    @Autowired
+    private HttpSession session;
+
     @GetMapping
     public String main(Model model) {
         Iterable<Product> products = repo.findAll();
@@ -48,6 +52,9 @@ public class HomeController {
 
     @GetMapping("/products/add")
     public String add(Model model) {
+        if(session.getAttribute("CURRENT_USER")==null){
+            return "redirect:/users/login";
+        }
         model.addAttribute("product", new ProductData());
         model.addAttribute("categories", categoryRepo.findAll());
         return "input";
@@ -55,6 +62,10 @@ public class HomeController {
 
     @PostMapping("/products/save")
     public String save(@Valid ProductData productData, BindingResult resultErrors, Model model) {
+
+        if(session.getAttribute("CURRENT_USER")==null){
+            return "redirect:/users/login";
+        }
 
         if(resultErrors.hasErrors()) {
             MessageData errorMessage = new MessageData();
@@ -79,12 +90,20 @@ public class HomeController {
 
     @GetMapping("/products/remove/{id}")
     public String remove(Model model, @PathVariable("id") Long id) {
+        if(session.getAttribute("CURRENT_USER")==null){
+            return "redirect:/users/login";
+        }
+
         repo.deleteById(id);
         return "redirect:/";
     }
 
     @GetMapping("/products/edit/{id}")
     public String edit(Model model, @PathVariable("id") Long id) {
+        if(session.getAttribute("CURRENT_USER")==null){
+            return "redirect:/users/login";
+        }
+
         Optional<Product> product = repo.findById(id);
         if(product.isPresent()) {
             model.addAttribute("product", product);
@@ -95,6 +114,10 @@ public class HomeController {
 
     @PostMapping("/products/update")
     public String update(Product product) {
+        if(session.getAttribute("CURRENT_USER")==null){
+            return "redirect:/users/login";
+        }
+        
         repo.save(product);
         return "redirect:/";
     }
